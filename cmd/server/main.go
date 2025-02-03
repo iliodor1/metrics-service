@@ -64,18 +64,13 @@ func (h *Handler) webhook(w http.ResponseWriter, r *http.Request) {
 	path := strings.TrimPrefix(r.URL.Path, "/update/")
 	parts := strings.Split(path, "/")
 
+	// Проверка наличия имени метрики
 	if len(parts) != 3 {
-		http.Error(w, "Неверный формат URL. Ожидается /update/<type>/<name>/<value>.", http.StatusBadRequest)
+		http.Error(w, "Имя метрики не может быть пустым.", http.StatusNotFound)
 		return
 	}
 
 	metricType, metricName, metricValue := parts[0], parts[1], parts[2]
-
-	// Проверка наличия имени метрики
-	if metricName == "" {
-		http.Error(w, "Имя метрики не может быть пустым.", http.StatusNotFound)
-		return
-	}
 
 	// Обработка в зависимости от типа метрики
 	switch metricType {
